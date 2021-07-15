@@ -1,6 +1,8 @@
 import Head from "next/head";
+import { signIn, signOut, useSession } from "next-auth/client";
 
 export default function Home() {
+  const [session, loading] = useSession();
   return (
     <div
       className="flex flex-col items-center justify-center min-h-screen bg-black"
@@ -15,6 +17,19 @@ export default function Home() {
       </Head>
 
       <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center ">
+        {!session && (
+          <>
+            Not signed in <br />
+            <button>Sign in</button>
+          </>
+        )}
+        {session && (
+          <div className="font-bold text-white">
+            Signed in as {session.user.email} <br />
+            <button onClick={() => signOut()}>Sign out</button>
+          </div>
+        )}
+
         <h1 className="text-6xl font-bold text-white max-w-lg">
           Unlimited movies, TV shows, and more.
         </h1>
@@ -29,7 +44,10 @@ export default function Home() {
             placeholder="Email address"
             className="bg-white p-4 min-w-max"
           />
-          <button className="bg-red-500 text-white text-xl flex items-center px-8">
+          <button
+            onClick={() => signIn()}
+            className="bg-red-500 text-white text-xl flex items-center px-8"
+          >
             Get Started
             <svg
               xmlns="http://www.w3.org/2000/svg"
